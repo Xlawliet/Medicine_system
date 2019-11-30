@@ -1,0 +1,178 @@
+package Frame;
+
+import DAO.DBconnection;
+import DAO.UsePROCEDURE;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class UI extends JFrame {
+
+    public static void init() {
+        JFrame Main_Frame = new JFrame();
+        // 4.设置窗体对象的属性值：标题、大小、显示位置、关闭操作、布局、禁止调整大小、可见、...
+        Main_Frame.setTitle("Login");// 设置窗体的标题
+        Main_Frame.setSize(500, 500);// 设置窗体的大小，单位是像素
+        Main_Frame.setLocationRelativeTo(null);
+        Main_Frame.setDefaultCloseOperation(3);// 设置窗体的关闭操作；3表示关闭窗体退出程序；2、1、0
+        Main_Frame.setLayout(null);
+
+        JLabel Name = new JLabel("用户名：");
+        Name.setBounds(30, 50, 100, 30);
+        Main_Frame.add(Name);
+        //panel.add(Name);
+        JTextField UserName = new JTextField(30);
+        UserName.setBounds(150, 50, 150, 40);
+        Main_Frame.add(UserName);
+        //panel.add(UserName);
+        JLabel Psw = new JLabel(" 密码 ：");
+        Psw.setBounds(30, 120, 150, 30);
+        Main_Frame.add(Psw);
+        //panel.add(Psw);
+        JPasswordField Password = new JPasswordField(15);
+        Password.setBounds(150, 120, 150, 40);
+        Main_Frame.add(Password);
+        //panel.add(Password);
+        JButton Login = new JButton("登录");
+        Login.setBounds(150, 300, 100, 30);
+        Main_Frame.add(Login);
+        //panel.add(Login);
+        Login.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                String User_name = UserName.getText();
+                String User_psd = String.valueOf(Password.getPassword());
+                //登录
+                System.out.println("user:"+User_name+" pwd :"+User_psd);
+                //DBconnection pro = new DBconnection();
+                //pro.getLink_U_P(User_name,User_psd);
+                UsePROCEDURE pro=new UsePROCEDURE();
+                pro.PRO_Link(User_name,User_psd);
+                if(pro.db.res==1) {
+                    JOptionPane.showMessageDialog(null, "用户名或密码错误，请检查后重新登录！", "出错啦！", JOptionPane.ERROR_MESSAGE);
+                    pro.db.res=0;
+                }
+                else
+                {
+                    //登录成功后进入功能选择阶段
+                    Func_init(pro);
+                    Main_Frame.setVisible(false);     //修改可见性
+
+                }
+            }
+        });
+
+        Main_Frame.setVisible(true);// 设置窗体为可见
+    }
+
+
+    public static void Func_init(UsePROCEDURE pro) {
+        JFrame Func_Frame = new JFrame();
+        // 4.设置窗体对象的属性值：标题、大小、显示位置、关闭操作、布局、禁止调整大小、可见、...
+        Func_Frame.setTitle("选择操作");// 设置窗体的标题
+        Func_Frame.setSize(400, 500);// 设置窗体的大小，单位是像素
+        Func_Frame.setLocationRelativeTo(null);
+        Func_Frame.setDefaultCloseOperation(3);// 设置窗体的关闭操作；3表示关闭窗体退出程序；2、1、0
+        Func_Frame.setLayout(null);
+
+        //建立两个界面之间的连接
+        //UsePROCEDURE pro=new UsePROCEDURE();
+        Func fun=new Func();
+
+
+        JLabel text = new JLabel("请选择您需要的操作 ：");
+        text.setBounds(30, 50, 150, 30);
+        Func_Frame.add(text);
+        JButton SearchMedicine = new JButton("查询药品");
+        SearchMedicine.setBounds(150, 150, 100, 30);
+        Func_Frame.add(SearchMedicine);
+        SearchMedicine.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                fun.SearchUI(pro,Func_Frame);
+                Func_Frame.setVisible(false);
+            }
+        });
+
+        JButton AddMedicine = new JButton("添加药品");
+        AddMedicine.setBounds(150, 200, 100, 30);
+        Func_Frame.add(AddMedicine);
+        AddMedicine.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                fun.AddUI(pro,Func_Frame);
+                Func_Frame.setVisible(false);
+            }
+        });
+
+        JButton DelMedicine = new JButton("删除药品");
+        DelMedicine.setBounds(150, 250, 100, 30);
+        Func_Frame.add(DelMedicine);
+        DelMedicine.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+
+                fun.DelUI(pro,Func_Frame);
+                Func_Frame.setVisible(false);
+
+            }
+        });
+
+        JButton CheckValidity = new JButton("查看药品保质期");
+        CheckValidity.setBounds(125, 300, 150, 30);
+        Func_Frame.add(CheckValidity);
+        CheckValidity.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                fun.CheakVa(pro,Func_Frame);
+                Func_Frame.setVisible(false);
+            }
+        });
+
+        JButton MedicineInStorage = new JButton("查看药品入库信息");
+        MedicineInStorage.setBounds(125, 350, 150, 30);
+        Func_Frame.add(MedicineInStorage);
+        MedicineInStorage.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                fun.InStorage(pro,Func_Frame);
+                Func_Frame.setVisible(false);
+            }
+        });
+
+
+
+
+//        JPanel p = new JPanel();
+//        addFunc(p);
+//        Func_Frame.add(p);
+//        Func_Frame.setContentPane(p);
+
+        Func_Frame.setVisible(true);// 设置窗体为可见
+    }
+
+  /*  public static void addComp(JPanel panel) {
+        panel.setLayout(null);
+        JLabel Name = new JLabel("用户名：");
+        Name.setBounds(30, 50, 100, 30);
+        panel.add(Name);
+        JTextField UserName = new JTextField(30);
+        UserName.setBounds(150, 50, 150, 40);
+        panel.add(UserName);
+        JLabel Psw = new JLabel(" 密码 ：");
+        Psw.setBounds(30, 120, 150, 30);
+        panel.add(Psw);
+        JPasswordField Password = new JPasswordField(15);
+        Password.setBounds(150, 120, 150, 40);
+        panel.add(Password);
+
+        JButton Login = new JButton("登录");
+        Login.setBounds(150, 300, 100, 30);
+        panel.add(Login);
+        Login.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+
+                String User_name = UserName.getText();
+                String User_psd = String.valueOf(Password.getPassword());
+
+                UsePROCEDURE pro=new UsePROCEDURE();
+
+            }
+        });
+*/
+}
