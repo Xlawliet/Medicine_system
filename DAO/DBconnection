@@ -1,0 +1,66 @@
+package DAO;
+
+import java.sql.*;
+
+public class DBconnection {
+    private  static  String driverName="oracle.jdbc.OracleDriver";//
+    private static String user="system";//
+    private static String pwd="Xzy520520";//
+    private static  String url="jdbc:oracle:thin:@localhost:1521:ORCL";//
+
+    public static int res=0;
+
+    public static Connection getLink_U_P(String name,String password)
+    {
+        try
+        {
+            Class.forName(driverName);
+            return DriverManager.getConnection(url,name,password);
+        }catch (Exception e)
+        {
+            res=1;
+            e.printStackTrace();
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    public static Connection getLink()
+    {
+        try
+        {
+            Class.forName(driverName);
+            //System.out.println(DriverManager.getConnection(url,user,pwd));
+            return DriverManager.getConnection(url,user,pwd);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    public static void Close(Connection conn)
+    {
+        try
+        {
+            conn.close();
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+            System.out.println(e);
+        }
+    }
+    public static void Close(Connection conn,CallableStatement call)
+    {
+        try
+        {
+            conn.close();
+            call.close();
+        }catch (Exception e)
+        {
+            System.out.println(e);
+            e.printStackTrace();
+        }
+    }
+}
