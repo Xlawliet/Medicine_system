@@ -1,0 +1,400 @@
+package Frame;
+
+import DAO.UseFUNCTION;
+import DAO.UsePROCEDURE;
+import javafx.scene.control.ComboBox;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.Vector;
+
+public class Func extends JFrame {
+
+    UseFUNCTION useFUNCTION=new UseFUNCTION();
+    //删除药品界面
+    public void DelUI(UsePROCEDURE pro,JFrame Main_Frame)
+    {
+        JFrame Del_Frame = new JFrame();
+        // 4.设置窗体对象的属性值：标题、大小、显示位置、关闭操作、布局、禁止调整大小、可见、...
+        Del_Frame.setTitle("删除药品");// 设置窗体的标题
+        Del_Frame.setSize(500, 400);// 设置窗体的大小，单位是像素
+        Del_Frame.setLocationRelativeTo(null);
+        Del_Frame.setDefaultCloseOperation(3);// 设置窗体的关闭操作；3表示关闭窗体退出程序；2、1、0
+        Del_Frame.setLayout(null);
+
+        JLabel text_1 = new JLabel("请输入您要删除的药品代码 ：");
+        text_1.setBounds(30, 50, 200, 30);
+        Del_Frame.add(text_1);
+
+        JTextField M_ID = new JTextField(30);
+        M_ID.setBounds(250, 50, 100, 40);
+        Del_Frame.add(M_ID);
+
+
+        JLabel text_2 = new JLabel("（注：若已无该药品则会返回完成！）");
+        text_2.setBounds(30, 210, 250, 30);
+        Del_Frame.add(text_2);
+
+        JButton Confirm = new JButton("删除");
+        Confirm.setBounds(100, 250, 100, 30);
+        Del_Frame.add(Confirm);
+        //panel.add(Login);
+        Confirm.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                String M_code=M_ID.getText();
+                System.out.println(M_code);
+                pro.PRO_delmedicine(M_code);
+                if(pro.res==false)
+                {
+                    JOptionPane.showMessageDialog(null, "错误！请检查后重新发送！", "出错啦！", JOptionPane.ERROR_MESSAGE);
+                    pro.res=true;
+                }
+            }
+        });
+
+        JButton Back = new JButton("返回");
+        Back.setBounds(220, 250, 100, 30);
+        Del_Frame.add(Back);
+        //panel.add(Login);
+        Back.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                Main_Frame.setVisible(true);
+                Del_Frame.dispose();                              //关闭当前界面
+            }
+        });
+
+        Del_Frame.setVisible(true);
+    }
+
+    //添加药品界面
+    public void AddUI(UsePROCEDURE pro,JFrame Main_Frame)
+    {
+        JFrame Add_Frame = new JFrame();
+        // 4.设置窗体对象的属性值：标题、大小、显示位置、关闭操作、布局、禁止调整大小、可见、...
+        Add_Frame.setTitle("添加药品");// 设置窗体的标题
+        Add_Frame.setSize(400, 600);// 设置窗体的大小，单位是像素
+        Add_Frame.setLocationRelativeTo(null);
+        Add_Frame.setDefaultCloseOperation(3);// 设置窗体的关闭操作；3表示关闭窗体退出程序；2、1、0
+        Add_Frame.setLayout(null);
+
+        JLabel text_1 = new JLabel("药品代码 ：");
+        text_1.setBounds(30, 50, 100, 30);
+        Add_Frame.add(text_1);
+        JTextField M_ID = new JTextField(30);
+        M_ID.setBounds(150, 50, 100, 40);
+        Add_Frame.add(M_ID);
+
+        JLabel text_2 = new JLabel("药品名称 ：");
+        text_2.setBounds(30, 100, 100, 30);
+        Add_Frame.add(text_2);
+        JTextField M_NAME = new JTextField(30);
+        M_NAME.setBounds(150, 100, 100, 40);
+        Add_Frame.add(M_NAME);
+
+        JLabel text_3 = new JLabel("药品类型 ：");
+        text_3.setBounds(30, 150, 100, 30);
+        Add_Frame.add(text_3);
+        JTextField M_Type = new JTextField(30);
+        M_Type.setBounds(150, 150, 100, 40);
+        Add_Frame.add(M_Type);
+
+        JLabel text_4 = new JLabel("药品剂型 ：");
+        text_4.setBounds(30, 200, 100, 30);
+        Add_Frame.add(text_4);
+        JTextField M_Spec = new JTextField(30);
+        M_Spec.setBounds(150, 200, 100, 40);
+        Add_Frame.add(M_Spec);
+
+        JLabel text_5 = new JLabel("药品保质期 ：");
+        text_5.setBounds(30, 250, 100, 30);
+        Add_Frame.add(text_5);
+        JTextField M_Valit = new JTextField(30);
+        M_Valit.setBounds(150, 250, 100, 40);
+        Add_Frame.add(M_Valit);
+
+        JLabel text_6 = new JLabel("药品价格 ：");
+        text_6.setBounds(30, 300, 100, 30);
+        Add_Frame.add(text_6);
+        JTextField M_Price = new JTextField(30);
+        M_Price.setBounds(150, 300, 100, 40);
+        Add_Frame.add(M_Price);
+
+        JLabel text_7=new JLabel("");
+        text_7.setBounds(30,380,100,40);
+        Add_Frame.add(text_7);
+
+        JButton Confirm = new JButton("添加");
+        Confirm.setBounds(100, 450, 100, 30);
+        Add_Frame.add(Confirm);
+        Confirm.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                String ID=M_ID.getText();
+                String Name=M_NAME.getText();
+                String Type=M_Type.getText();
+                String Spec=M_Spec.getText();
+                String Valit=M_Valit.getText();
+                Float Price=new Float(M_Price.getText());
+                pro.PRO_addmedicine(ID,Name,Type,Spec,Valit,Price);
+                if(pro.res==false) {
+                    pro.res=true;
+                    JOptionPane.showMessageDialog(null, "错误！请检查后重新发送！", "出错啦！", JOptionPane.ERROR_MESSAGE);
+                }
+                text_7.setText("完成");
+            }
+        });
+
+        JButton Back = new JButton("返回");
+        Back.setBounds(220, 450, 100, 30);
+        Add_Frame.add(Back);
+        //panel.add(Login);
+        Back.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                Main_Frame.setVisible(true);
+                Add_Frame.dispose();                              //关闭当前界面
+            }
+        });
+
+
+        Add_Frame.setVisible(true);
+    }
+
+    //添加药品入库信息
+    public void InStorage(UsePROCEDURE pro,JFrame Main_Frame)
+    {
+        JFrame InStorage_Frame = new JFrame();
+        // 4.设置窗体对象的属性值：标题、大小、显示位置、关闭操作、布局、禁止调整大小、可见、...
+        InStorage_Frame.setTitle("添加药品");// 设置窗体的标题
+        InStorage_Frame.setSize(400, 600);// 设置窗体的大小，单位是像素
+        InStorage_Frame.setLocationRelativeTo(null);
+        InStorage_Frame.setDefaultCloseOperation(3);// 设置窗体的关闭操作；3表示关闭窗体退出程序；2、1、0
+        InStorage_Frame.setLayout(null);
+
+        JLabel text_1 = new JLabel("入库单号 ：");
+        text_1.setBounds(30, 50, 100, 30);
+        InStorage_Frame.add(text_1);
+        JTextField M_IN_NUM = new JTextField(30);
+        M_IN_NUM.setBounds(150, 50, 100, 40);
+        InStorage_Frame.add(M_IN_NUM);
+
+        JLabel text_2 = new JLabel("仓库代号 ：");
+        text_2.setBounds(30, 100, 100, 30);
+        InStorage_Frame.add(text_2);
+        JTextField H_ID = new JTextField(30);
+        H_ID.setBounds(150, 100, 100, 40);
+        InStorage_Frame.add(H_ID);
+
+        JLabel text_3 = new JLabel("药品名称 ：");
+        text_3.setBounds(30, 150, 100, 30);
+        InStorage_Frame.add(text_3);
+        JTextField M_NAME = new JTextField(30);
+        M_NAME.setBounds(150, 150, 100, 40);
+        InStorage_Frame.add(M_NAME);
+
+        JLabel text_4 = new JLabel("负责职员编号 ：");
+        text_4.setBounds(30, 200, 100, 30);
+        InStorage_Frame.add(text_4);
+        JTextField E_ID = new JTextField(30);
+        E_ID.setBounds(150, 200, 100, 40);
+        InStorage_Frame.add(E_ID);
+
+        JLabel text_5 = new JLabel("药品入库数量 ：");
+        text_5.setBounds(30, 250, 100, 30);
+        InStorage_Frame.add(text_5);
+        JTextField M_IN_QUANTITY = new JTextField(30);
+        M_IN_QUANTITY.setBounds(150, 250, 100, 40);
+        InStorage_Frame.add(M_IN_QUANTITY);
+
+        JLabel text_6 = new JLabel("药品入库日期 ：");
+        text_6.setBounds(30, 300, 100, 30);
+        InStorage_Frame.add(text_6);
+        JTextField M_IN_DATE = new JTextField(30);
+        M_IN_DATE.setBounds(150, 300, 100, 40);
+        InStorage_Frame.add(M_IN_DATE);
+
+        JButton Confirm = new JButton("添加");
+        Confirm.setBounds(100, 450, 100, 30);
+        InStorage_Frame.add(Confirm);
+        Confirm.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                String INNUM=M_IN_NUM.getText();
+                String HouseName=H_ID.getText();
+                String MNAME=M_NAME.getText();
+                String EID=E_ID.getText();
+                Integer QUANTITY=new Integer(M_IN_QUANTITY.getText());
+                String DATE=M_IN_DATE.getText();
+                pro.PRO_instorage(INNUM,HouseName,MNAME,EID,QUANTITY,DATE);
+                if(pro.res==false) {
+                    pro.res=true;
+                    JOptionPane.showMessageDialog(null, "错误！请检查后重新发送！", "出错啦！", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        JButton Back = new JButton("返回");
+        Back.setBounds(220, 450, 100, 30);
+        InStorage_Frame.add(Back);
+        //panel.add(Login);
+        Back.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                Main_Frame.setVisible(true);
+                InStorage_Frame.dispose();                              //关闭当前界面
+            }
+        });
+
+
+        InStorage_Frame.setVisible(true);
+    }
+
+    //查询药品界面
+    public void SearchUI(UsePROCEDURE pro,JFrame Main_Frame) {
+        JFrame Search_Frame = new JFrame();
+        // 4.设置窗体对象的属性值：标题、大小、显示位置、关闭操作、布局、禁止调整大小、可见、...
+        Search_Frame.setTitle("查询药品");// 设置窗体的标题
+        Search_Frame.setSize(400, 300);// 设置窗体的大小，单位是像素
+        Search_Frame.setLocationRelativeTo(null);
+        Search_Frame.setDefaultCloseOperation(3);// 设置窗体的关闭操作；3表示关闭窗体退出程序；2、1、0
+        Search_Frame.setLayout(null);
+
+        JComboBox<String> Tablenames=new JComboBox<String>();
+        Tablenames.setBounds(80,50,150,30);
+        Search_Frame.add(Tablenames);
+        Tablenames.addItem("MEDICINE");
+        Tablenames.addItem("CUSTOMER");
+        Tablenames.addItem("PROVIDER");
+        Tablenames.addItem("HOUSE");
+        Tablenames.addItem("IN_STORAGE");
+
+        JTable table=new JTable();
+        Search_Frame.add(table);
+
+        JButton Confirm = new JButton("查询");
+        Confirm.setBounds(100, 200, 100, 30);
+        Search_Frame.add(Confirm);
+        Confirm.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                String tablename=(String) Tablenames.getSelectedItem();
+                try {
+                    ResultSet resultSet=pro.Select_Table(tablename);
+                    useFUNCTION.displayResultSet(table,resultSet);
+                    System.out.println(resultSet);
+                    if(UseFUNCTION.res==true)
+                        SelectTable(table,tablename,Search_Frame);
+                    else
+                        UseFUNCTION.res=true;
+                    //JOptionPane.showMessageDialog(null, "错误！请检查后重新发送！", "出错啦！", JOptionPane.ERROR_MESSAGE);
+
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        JButton Back = new JButton("返回");
+        Back.setBounds(220, 200, 100, 30);
+        Search_Frame.add(Back);
+        //panel.add(Login);
+        Back.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                Main_Frame.setVisible(true);
+                Search_Frame.dispose();                              //关闭当前界面
+            }
+        });
+
+        Search_Frame.setVisible(true);
+
+    }
+
+    //查询某药品保质期界面
+    public void CheakVa(UsePROCEDURE pro,JFrame Main_Frame)
+    {
+        JFrame CheakVa_Frame = new JFrame();
+        // 4.设置窗体对象的属性值：标题、大小、显示位置、关闭操作、布局、禁止调整大小、可见、...
+        CheakVa_Frame.setTitle("查询药品保质期");// 设置窗体的标题
+        CheakVa_Frame.setSize(600, 400);// 设置窗体的大小，单位是像素
+        CheakVa_Frame.setLocationRelativeTo(null);
+        CheakVa_Frame.setDefaultCloseOperation(3);// 设置窗体的关闭操作；3表示关闭窗体退出程序；2、1、0
+        CheakVa_Frame.setLayout(null);
+
+
+        JLabel text_1 = new JLabel("请输入您要查询的药品代码 ：");
+        text_1.setBounds(30, 50, 200, 30);
+        CheakVa_Frame.add(text_1);
+
+        JTextField M_ID = new JTextField(30);
+        M_ID.setBounds(250, 50, 100, 30);
+        CheakVa_Frame.add(M_ID);
+
+        JButton Confirm = new JButton("查询");
+        Confirm.setBounds(100, 250, 100, 30);
+        CheakVa_Frame.add(Confirm);
+        //panel.add(Login);
+
+        JLabel msg = new JLabel();
+        msg.setBounds(50, 150, 500, 30);
+        CheakVa_Frame.add(msg);
+        Confirm.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                String M_code=M_ID.getText();
+                System.out.println(M_code);
+                String[] rs=pro.PRO_checkValidity(M_code);
+                msg.setText("药品代号为： "+rs[0]+" ，药品名称为： "+rs[1] +" ,保质期到： "+rs[2]);
+                if(pro.res==false)
+                {
+                    JOptionPane.showMessageDialog(null, "错误！请检查后重新发送！", "出错啦！", JOptionPane.ERROR_MESSAGE);
+                    pro.res=true;
+                }
+            }
+        });
+
+        JButton Back = new JButton("返回");
+        Back.setBounds(220, 250, 100, 30);
+        CheakVa_Frame.add(Back);
+        //panel.add(Login);
+        Back.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                Main_Frame.setVisible(true);
+                CheakVa_Frame.dispose();                              //关闭当前界面
+            }
+        });
+
+        CheakVa_Frame.setVisible(true);
+    }
+
+
+    public void SelectTable(JTable table,String tablename,JFrame Last_Frame)
+    {
+        JFrame DisplayTable = new JFrame();
+        DisplayTable.setTitle(tablename);// 设置窗体的标题
+        DisplayTable.setSize(800, 800);// 设置窗体的大小，单位是像素
+        DisplayTable.setLocationRelativeTo(null);
+        DisplayTable.setDefaultCloseOperation(2);// 设置窗体的关闭操作；3表示关闭窗体退出程序；2、1、0
+
+        JScrollPane s=new JScrollPane(table);
+        DisplayTable.add(s);
+
+
+//        JButton Back = new JButton("返回");
+//        Back.setBounds(350, 700, 100, 30);
+//        DisplayTable.add(Back);
+//        //panel.add(Login);
+//        Back.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent arg0) {
+//                Last_Frame.setVisible(true);
+//                DisplayTable.dispose();                              //关闭当前界面
+//            }
+//        });
+
+        DisplayTable.setVisible(true);
+    }
+
+
+}
